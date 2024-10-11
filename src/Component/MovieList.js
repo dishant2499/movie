@@ -3,31 +3,32 @@ import moment from "moment/moment";
 import ReactPaginate from "react-paginate";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { movieDataList } from "../redux/userAction";
+import { movieDataList, setPaginationData } from "../redux/userReducer";
+import Loader from "./Loader";
 
 const MovieList = () => {
     const dispatch = useDispatch();
     let navigate = useNavigate();
-    const { movieData, loading, intialPage, totalPages } = useSelector(
+    const { movieData, loading, intialPage, totalPages, error } = useSelector(
         (data) => data.user
     );
+
+    console.log("error", error);
     useEffect(() => {
         dispatch(movieDataList(intialPage));
     }, [intialPage]);
 
     const handlePageClick = (event) => {
-        dispatch({
-            type: "FETCH_MOVIE_PAGINATION_DATA",
-            payload: event?.selected + 1,
-        });
+        dispatch(setPaginationData(event?.selected + 1));
     };
-    console.log("movieData", movieData);
+
     return (
         <>
             {loading ? (
-                <div className="w-full h-screen flex justify-center items-center">
-                    <div className="w-6 h-6 mr-2 border-4 border-gray-300 border-t-4 border-t-blue-500 rounded-full animate-spin"></div>
-                    Loading ...{" "}
+                <Loader />
+            ) : error ? (
+                <div className="text-red-500 flex items-center justify-center">
+                    {error}
                 </div>
             ) : (
                 <div className="p-10">
