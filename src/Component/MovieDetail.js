@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 import { movieDetailData } from "../redux/userReducer";
 import Loader from "./Loader";
 
-const MovieDetail = () => {
+const MovieDetail = ({ id }) => {
     const dispatch = useDispatch();
     const { loading, movieDetails } = useSelector((data) => data.user);
-    const { id } = useParams();
 
     useEffect(() => {
         dispatch(movieDetailData(id));

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import Input from "./Input";
 
 const Converter = () => {
-    const [Converter, setConverter] = useState("tempreture");
+    const [Converter, setConverter] = useState("temperature");
     const [label, setLabel] = useState({
-        label1: "Celcius",
-        label2: "Farenheit",
+        label1: "Celsius",
+        label2: "Fahrenheit",
     });
     const [valueList, setValueList] = useState({
         value1: 1,
@@ -12,14 +13,14 @@ const Converter = () => {
     });
 
     const ConvertValue = (value, name, ConverterList) => {
-        if (ConverterList === "tempreture") {
-            if (name === "Celcius") {
+        if (ConverterList === "temperature") {
+            if (name === "Celsius") {
                 const changeValue = (value * 9) / 5 + 32;
                 setValueList({
                     value1: value,
                     value2: changeValue,
                 });
-            } else if (name === "Farenheit") {
+            } else if (name === "Fahrenheit") {
                 const changeValue = ((value - 32) * 5) / 9;
                 setValueList({
                     value1: changeValue,
@@ -46,13 +47,13 @@ const Converter = () => {
     useEffect(() => {
         ConvertValue(
             1,
-            Converter === "tempreture" ? "Celcius" : "Second",
+            Converter === "temperature" ? "Celsius" : "Second",
             Converter
         );
-        if (Converter === "tempreture") {
+        if (Converter === "temperature") {
             setLabel({
-                label1: "Celcius",
-                label2: "Farenheit",
+                label1: "Celsius",
+                label2: "Fahrenheit",
             });
         } else if (Converter === "time") {
             setLabel({
@@ -80,35 +81,28 @@ const Converter = () => {
                     id="converter"
                     onChange={handleOnSelectConverter}
                 >
-                    <option value="tempreture">tempreture</option>
+                    <option value="temperature">temperature</option>
                     <option value="time">time</option>
                 </select>
                 <div className="flex justify-between">
-                    <div className="flex flex-col gap-1">
-                        <label>{label.label1}</label>
-                        <input
-                            type="number"
-                            value={valueList.value1}
-                            defaultValue={0}
-                            placeholder={`please enter ${label.label1}`}
-                            name={label.label1}
-                            className="border border-black max-w-[250px] rounded-lg py-1 px-2"
-                            onChange={handleOnConverterChange}
-                        />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <label>{label.label2}</label>
-                        <input
-                            type="number"
-                            value={valueList.value2}
-                            defaultValue={0}
-                            placeholder={`please enter ${label.label2}`}
-                            name={label.label2}
-                            className="border border-black max-w-[250px] rounded-lg py-1 px-2"
-                            onChange={handleOnConverterChange}
-                            onClick={(e) => console.log("errrr", e)}
-                        />
-                    </div>
+                    <Input
+                        label={label.label1}
+                        type="number"
+                        value={valueList.value1}
+                        defaultValue={0}
+                        placeholder={`please enter ${label.label1}`}
+                        name={label.label1}
+                        onChange={handleOnConverterChange}
+                    />
+                    <Input
+                        label={label.label2}
+                        type="number"
+                        value={valueList.value2}
+                        defaultValue={0}
+                        placeholder={`please enter ${label.label2}`}
+                        name={label.label2}
+                        onChange={handleOnConverterChange}
+                    />
                 </div>
             </div>
         </div>

@@ -9,14 +9,13 @@ import Loader from "./Loader";
 const MovieList = () => {
     const dispatch = useDispatch();
     let navigate = useNavigate();
-    const { movieData, loading, intialPage, totalPages, error } = useSelector(
+    const { movieData, loading, initialPage, totalPages, error } = useSelector(
         (data) => data.user
     );
 
-    console.log("error", error);
     useEffect(() => {
-        dispatch(movieDataList(intialPage));
-    }, [intialPage]);
+        dispatch(movieDataList(initialPage));
+    }, [initialPage]);
 
     const handlePageClick = (event) => {
         dispatch(setPaginationData(event?.selected + 1));
@@ -78,16 +77,16 @@ const MovieList = () => {
                     </div>
                     <div className="mt-10">
                         <ReactPaginate
-                            containerClassName={"pagination"}
-                            pageClassName={"page-item"}
-                            activeClassName={"active"}
+                            containerClassName="pagination"
+                            pageClassName="page-item"
+                            activeClassName="active"
                             breakLabel="..."
                             pageCount={totalPages}
                             pageRangeDisplayed={5}
                             previousLabel="< previous"
                             nextLabel="next >"
                             onPageChange={handlePageClick}
-                            forcePage={intialPage - 1}
+                            forcePage={initialPage - 1}
                         />
                     </div>
                 </div>

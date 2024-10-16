@@ -5,9 +5,17 @@ const initialState = {
     movieData: [],
     loading: false,
     error: null,
-    intialPage: 1,
+    initialPage: 1,
     totalPages: 0,
     movieDetails: null,
+    formData: {},
+    activeSteps: {
+        step1: { isCompleted: false, isActive: true },
+        step2: { isCompleted: false, isActive: false },
+        step3: { isCompleted: false, isActive: false },
+    },
+    stepDetails: {},
+    totalFormList: [],
 };
 
 export const movieDataList = createAsyncThunk(
@@ -16,6 +24,12 @@ export const movieDataList = createAsyncThunk(
         try {
             const response = await movieDeatils(page);
             return response;
+            // if (response == 200) {
+            // }
+            // return rejectWithValue({
+            //     message: response.err,
+            //     code: response.err,
+            // });
         } catch (err) {
             return rejectWithValue({
                 message: err.response.data.status_message,
@@ -32,6 +46,7 @@ export const movieDetailData = createAsyncThunk(
             const response = await movieDeatilDescription(id);
             return response;
         } catch (err) {
+            console.log("err", err);
             return rejectWithValue({
                 message: err.response.data.status_message,
                 code: err.response.data.status_code,
@@ -45,7 +60,43 @@ export const movieSlice = createSlice({
     initialState,
     reducers: {
         setPaginationData: (state, action) => {
-            state.intialPage = action.payload;
+            state.initialPage = action.payload;
+        },
+        setFormData: (state, action) => {
+            state.formData = action.payload;
+        },
+        setStepFormDetails: (state, action) => {
+            state.stepDetails = {
+                ...state.stepDetails,
+                ...action.payload.formData,
+            };
+            state.activeSteps = {
+                ...state.activeSteps,
+                [action.payload.isActive]: {
+                    isCompleted: false,
+                    isActive: true,
+                },
+                [action.payload.isCompleted]: {
+                    isCompleted: true,
+                    isActive: false,
+                },
+            };
+        },
+        setPreviousStep: (state, action) => {
+            state.activeSteps = {
+                ...state.activeSteps,
+                [action.payload.isActive]: {
+                    ...state.activeSteps[action.payload.isActive],
+                    isActive: true,
+                },
+                [action.payload.isPreviousActive]: {
+                    ...state.activeSteps[action.payload.isPreviousActive],
+                    isActive: false,
+                },
+            };
+        },
+        setMultipleFormData: (state, action) => {
+            state.totalFormList = action.payload;
         },
     },
     extraReducers: (builder) => {
@@ -59,7 +110,6 @@ export const movieSlice = createSlice({
                 state.totalPages = action.payload.total_pages;
             })
             .addCase(movieDataList.rejected, (state, action) => {
-                console.log("action", action);
                 state.error = action.payload.message;
                 state.loading = false;
             })
@@ -76,7 +126,13 @@ export const movieSlice = createSlice({
             });
     },
 });
-console.log("initialState", initialState);
-export const { setPaginationData } = movieSlice.actions;
+
+export const {
+    setPaginationData,
+    setFormData,
+    setStepFormDetails,
+    setPreviousStep,
+    setMultipleFormData,
+} = movieSlice.actions;
 
 export default movieSlice.reducer;
